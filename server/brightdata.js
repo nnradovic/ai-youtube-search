@@ -4,7 +4,7 @@ const webhookUrl =
     ? process.env.BRIGHTDATA_WEBHOOK_URL_PROD
     : process.env.BRIGHTDATA_WEBHOOK_URL_DEV;
 
-export const trigerBrightData = async (url) => {
+export const triggerYouTubeScrapperTool = async (url) => {
   const data = JSON.stringify([
     {
       url: url,

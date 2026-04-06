@@ -33,11 +33,13 @@ app.post("/generate", async (req, res) => {
 });
 
 app.post("/webhook", async (req, res) => {
-  await Promise.all(
-    req.body.map((video) => {
-      return addVideoToVectorStore(video);
-    }),
-  );
+  //   await Promise.all(
+  //     req.body.map((video) => {
+  //       return addVideoToVectorStore(video);
+  //     }),
+  //   );
+  addVideoToVectorStore(req.body[0]);
+  console.log("Received webhook with data:", req.body);
   res.send("ok");
 });
 

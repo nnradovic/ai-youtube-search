@@ -5,20 +5,21 @@ import { tool } from "@langchain/core/tools";
 import { MemorySaver } from "@langchain/langgraph";
 import z from "zod";
 import { addVideoToVectorStore, vectorStore } from "./embeddings.js";
+import { triggerYouTubeScrapperTool } from "./brightdata.js";
 
 const llm = new ChatAnthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
   model: "claude-sonnet-4-20250514",
 });
 
-const trigerBrightData = tool(
+const triggerBrightData = tool(
   async ({ url }) => {
-    const snapshot_id = await trigerBrightData(url);
+    const snapshot_id = await triggerYouTubeScrapperTool(url);
     console.log(`Triggered BrightData with snapshot ID: ${snapshot_id}`);
     return snapshot_id;
   },
   {
-    name: "trigerBrightData",
+    name: "triggerYouTubeScrapperTool",
     description: "A tool to triger brightdata to scrape the video transcript",
     schema: z.object({
       url: z.string(),
@@ -55,6 +56,6 @@ const checkpointer = new MemorySaver();
 // console.log(retriveDocs);
 export const agent = createReactAgent({
   llm,
-  tools: [retriveTool, trigerBrightData],
+  tools: [retriveTool, triggerBrightData],
   checkpointer,
 });
