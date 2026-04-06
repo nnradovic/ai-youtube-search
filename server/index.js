@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { agent } from "./agent.js";
+import { getYoutubeVideoStatistics } from "./pupetter.js";
 
 const app = express();
 
@@ -8,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.send("Hello World!");
 });
 
@@ -29,6 +30,11 @@ app.post("/generate", async (req, res) => {
   console.log(result.messages.at(-1).content);
 
   res.send(result.messages.at(-1).content);
+});
+
+app.post("webhoosk", async (req, res) => {
+  console.log(req.body);
+  res.send("ok");
 });
 
 app.listen(PORT, () => {
