@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import { agent } from "./agent.js";
-import { getYoutubeVideoStatistics } from "./pupetter.js";
 
 const app = express();
 
