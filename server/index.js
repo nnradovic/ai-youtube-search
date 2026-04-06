@@ -33,11 +33,11 @@ app.post("/generate", async (req, res) => {
 });
 
 app.post("/webhook", async (req, res) => {
-  await Promise.all(
-    req.body.map((video) => {
-      return addVideoToVectorStore(video);
-    }),
-  );
+  //   await Promise.all(
+  //     req.body.map((video) => {
+  //       return addVideoToVectorStore(video);
+  //     }),
+  //   );
   res.send("ok");
 });
 
