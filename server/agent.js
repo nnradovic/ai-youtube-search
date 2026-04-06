@@ -11,14 +11,29 @@ const llm = new ChatAnthropic({
   model: "claude-sonnet-4-20250514",
 });
 
-const video = data[0];
+const trigerBrightData = tool(
+  async ({ url }) => {
+    const snapshot_id = await trigerBrightData(url);
+    console.log(`Triggered BrightData with snapshot ID: ${snapshot_id}`);
+    return snapshot_id;
+  },
+  {
+    name: "trigerBrightData",
+    description: "A tool to triger brightdata to scrape the video transcript",
+    schema: z.object({
+      url: z.string(),
+    }),
+  },
+);
 
-await addVideoToVectorStore(video);
+// const video = data[0];
+
+// await addVideoToVectorStore(video);
 
 const retriveTool = tool(
-  async ({ query }, { configurable: { video_id } }) => {
+  async ({ query, video_id }) => {
     const retriveDocs = await vectorStore.similaritySearch(query, 3, {
-      video_id: video_id,
+      video_id,
     });
     const serilizedDocs = retriveDocs.map((doc) => doc.pageContent).join("\n");
     return serilizedDocs;
@@ -28,6 +43,9 @@ const retriveTool = tool(
     description: "A tool to retrive relevant chunks from the video transcript",
     schema: z.object({
       query: z.string(),
+      video_id: z
+        .string()
+        .describe("The ID of the video to retrive the transcript chunks from"),
     }),
   },
 );
@@ -37,6 +55,6 @@ const checkpointer = new MemorySaver();
 // console.log(retriveDocs);
 export const agent = createReactAgent({
   llm,
-  tools: [retriveTool],
+  tools: [retriveTool, trigerBrightData],
   checkpointer,
 });
