@@ -18,11 +18,9 @@ await addVideoToVectorStore(video);
 
 const retriveTool = tool(
   async ({ query }, { configurable: { video_id } }) => {
-    const retriveDocs = await vectorStore.similaritySearch(
-      query,
-      3,
-      (doc) => doc.metadata.video_id === video_id,
-    );
+    const retriveDocs = await vectorStore.similaritySearch(query, 3, {
+      video_id: video_id,
+    });
     const serilizedDocs = retriveDocs.map((doc) => doc.pageContent).join("\n");
     return serilizedDocs;
   },

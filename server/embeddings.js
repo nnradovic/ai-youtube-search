@@ -2,12 +2,27 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { FakeVectorStore as MemoryVectorStore } from "@langchain/core/utils/testing";
 import { Document } from "@langchain/core/documents";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { PGVectorStore } from "@langchain/pgvector";
 
 const embeddingModel = new OpenAIEmbeddings({
   openAIApiKey: process.env.OPENAI_API_KEY,
   modelName: "text-embedding-3-large",
 });
-export const vectorStore = new MemoryVectorStore(embeddingModel);
+
+export const vectorStore = await PGVectorStore.initialize(embeddingModel, {
+  postgresConnectionOptions: {
+    connectionString: process.env.DB_URL,
+  },
+  tableName: "transcript",
+  columns: {
+    idColumnName: "id",
+    vectorColumnName: "embedding",
+    metadataColumnName: "metadata",
+    contentColumnName: "content",
+  },
+  distanceStrategy: "cosine",
+});
+// export const vectorStore = new MemoryVectorStore(embeddingModel);
 
 export const addVideoToVectorStore = async (videoData) => {
   // Create documents from the video transcript and split them into chunks
