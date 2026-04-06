@@ -1,5 +1,8 @@
 const brightDataUrl = "https://api.brightdata.com/datasets/v3/trigger";
-const webhookUrl = "http://example.com/webhook";
+const webhookUrl =
+  process.env.mode === "production"
+    ? process.env.BRIGHTDATA_WEBHOOK_URL_PROD
+    : process.env.BRIGHTDATA_WEBHOOK_URL_DEV;
 
 export const trigerBrightData = async (url) => {
   const data = JSON.stringify([
