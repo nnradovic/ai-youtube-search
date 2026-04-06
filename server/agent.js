@@ -12,7 +12,6 @@ const llm = new ChatAnthropic({
 });
 
 const video = data[0];
-const video_id = data[0].video_id;
 
 await addVideoToVectorStore(video);
 
@@ -36,22 +35,8 @@ const retriveTool = tool(
 const checkpointer = new MemorySaver();
 
 // console.log(retriveDocs);
-const agent = createReactAgent({
+export const agent = createReactAgent({
   llm,
   tools: [retriveTool],
   checkpointer,
 });
-
-const result = await agent.invoke(
-  {
-    messages: [
-      {
-        role: "user",
-        content: "Where firework occured first?",
-      },
-    ],
-  },
-  { configurable: { thread_id: 1, video_id: video_id } },
-);
-
-console.log(result.messages.at(-1).content);
