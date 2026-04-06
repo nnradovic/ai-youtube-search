@@ -1,4 +1,4 @@
-import { FormEvent, KeyboardEvent, useRef, useState } from "react";
+import { type FormEvent, type KeyboardEvent, useRef, useState } from "react";
 import "./index.css";
 
 type Message = {
@@ -46,7 +46,12 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/generate", {
+      const backendUrl =
+        import.meta.env.MODE === "production"
+          ? import.meta.env.VITE_BACKEND_URL_PROD
+          : import.meta.env.VITE_BACKEND_URL_DEV;
+
+      const response = await fetch(`${backendUrl}/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
