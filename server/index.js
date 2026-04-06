@@ -31,7 +31,7 @@ app.post("/generate", async (req, res) => {
   res.send(result.messages.at(-1).content);
 });
 
-app.post("webhoosk", async (req, res) => {
+app.post("/webhook", async (req, res) => {
   console.log(req.body);
   res.send("ok");
 });
